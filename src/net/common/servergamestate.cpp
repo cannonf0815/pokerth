@@ -212,7 +212,7 @@ SetPlayerResult(PlayerResult &playerResult, boost::shared_ptr<PlayerInterface> t
 	playerResult.set_playerid(tmpPlayer->getMyUniqueID());
 	int tmpCards[2];
 	int bestHandPos[5];
-	tmpPlayer->getMyCards(tmpCards);
+	tmpPlayer->getMyHoleCards(tmpCards);
 	playerResult.set_resultcard1(tmpCards[0]);
 	playerResult.set_resultcard2(tmpCards[1]);
 	tmpPlayer->getMyBestHandPosition(bestHandPos);
@@ -1004,7 +1004,7 @@ ServerGameStateHand::EngineLoop(boost::shared_ptr<ServerGame> server)
 				AllInShowCardsMessage::PlayerAllIn *playerAllIn = netAllInShow->add_playersallin();
 				playerAllIn->set_playerid((*i)->getMyUniqueID());
 				int tmpCards[2];
-				(*i)->getMyCards(tmpCards);
+				(*i)->getMyHoleCards(tmpCards);
 				playerAllIn->set_allincard1(tmpCards[0]);
 				playerAllIn->set_allincard2(tmpCards[1]);
 				++i;
@@ -1262,7 +1262,7 @@ ServerGameStateHand::StartNewHand(boost::shared_ptr<ServerGame> server)
 		if (tmpSession) {
 			int cards[2];
 			bool errorFlag = false;
-			tmpPlayer->getMyCards(cards);
+			tmpPlayer->getMyHoleCards(cards);
 
 			boost::shared_ptr<NetPacket> notifyCards = CreateNetPacketHandStart(*server);
 			HandStartMessage *netHandStart = notifyCards->GetMsg()->mutable_handstartmessage();

@@ -114,7 +114,7 @@ startWindowImpl::startWindowImpl(ConfigFile *c, Log *l)
 		//if custom bg file could not be found load the big origin file
 		centralwidget->setStyleSheet(".QWidget { background-image: url(:/android/android-data/gfx/gui/misc/startwindowbg10_mobile.png); background-position: top center; background-origin: content; background-repeat: no-repeat;}");
 	}
-	this->showFullScreen();
+	this->setWindowState(Qt::WindowFullScreen);
 
 	//TODO HACK Missing QSystemScreenSaver::setScreenSaverInhibited(true)
 //		#ifndef ANDROID_TEST
@@ -256,6 +256,10 @@ startWindowImpl::startWindowImpl(ConfigFile *c, Log *l)
 	connect(this, SIGNAL(signalPlayerGameInvitation(unsigned, unsigned, unsigned)), myGameLobbyDialog, SLOT(chatInfoPlayerInvitation(unsigned, unsigned, unsigned)));
 	connect(this, SIGNAL(signalRejectedGameInvitation(unsigned, unsigned, DenyGameInvitationReason)), myGameLobbyDialog, SLOT(chatInfoPlayerRejectedInvitation(unsigned, unsigned, DenyGameInvitationReason)));
 
+	QAction *actionStart_Local_Game_new = new QAction("Start (new) local game ...",this);
+	menuPokerTH->addAction(actionStart_Local_Game_new);
+	connect( actionStart_Local_Game_new, SIGNAL( triggered() ), this, SLOT( callNewGameDialogNew() ) );
+
 	this->show();
 
 	//update HACKS
@@ -286,6 +290,26 @@ void startWindowImpl::callNewGameDialog()
 	// sonst mit gespeicherten Werten starten
 	else {
 		startNewLocalGame();
+	}
+}
+
+void startWindowImpl::callNewGameDialogNew()
+{
+
+	//wenn Dialogfenster gezeigt werden soll
+	if(myConfig->readConfigInt("ShowGameSettingsDialogOnNewGame")) {
+
+#ifdef ANDROID
+		myGuiInterface->getMyW()->hide();
+#endif
+		myNewGameDialog->exec();
+		if (myNewGameDialog->result() == QDialog::Accepted ) {
+			startNewLocalGameNew(myNewGameDialog);
+		}
+	}
+	// sonst mit gespeicherten Werten starten
+	else {
+		startNewLocalGameNew();
 	}
 }
 
@@ -383,9 +407,6 @@ void startWindowImpl::startNewLocalGame(newGameDialogImpl *v)
 	int tmpDealerPos = 0;
 	startData.numberOfPlayers = gameData.maxNumberOfPlayers;
 	Tools::GetRand(0, startData.numberOfPlayers-1, 1, &tmpDealerPos);
-	//if(DEBUG_MODE) {
-	//    tmpDealerPos = 4;
-	//}
 	startData.startDealerPlayerId = static_cast<unsigned>(tmpDealerPos);
 
 	//some gui modifications
@@ -393,6 +414,117 @@ void startWindowImpl::startNewLocalGame(newGameDialogImpl *v)
 
 	//Start Game!!!
 	mySession->startLocalGame(gameData, startData);
+}
+
+void startWindowImpl::startNewLocalGameNew(newGameDialogImpl *v)
+{
+
+	// Stop local game.
+	myGuiInterface->getMyW()->stopTimer();
+
+	if (!myServerGuiInterface) {
+		// Create pseudo Gui Wrapper for the server.
+		myServerGuiInterface.reset(new ServerGuiWrapper(myConfig, mySession->getGui(), mySession->getGui(), mySession->getGui()));
+		{
+			boost::shared_ptr<Session> session(new Session(myServerGuiInterface.get(), myConfig, 0));
+			session->init(mySession->getAvatarManager());
+			myServerGuiInterface->setSession(session);
+		}
+	}
+
+	// Terminate existing network games.
+	mySession->terminateNetworkClient();
+	myServerGuiInterface->getSession()->terminateNetworkServer();
+
+
+	GameData gameData;
+	if(v) {
+		gameData.maxNumberOfPlayers = v->spinBox_quantityPlayers->value();
+		gameData.startMoney = v->spinBox_startCash->value();
+		gameData.firstSmallBlind = v->getChangeCompleteBlindsDialog()->spinBox_firstSmallBlind->value();
+		if(v->getChangeCompleteBlindsDialog()->radioButton_raiseBlindsAtHands->isChecked()) {
+			gameData.raiseIntervalMode = RAISE_ON_HANDNUMBER;
+			gameData.raiseSmallBlindEveryHandsValue = v->getChangeCompleteBlindsDialog()->spinBox_raiseSmallBlindEveryHands->value();
+		} else {
+			gameData.raiseIntervalMode = RAISE_ON_MINUTES;
+			gameData.raiseSmallBlindEveryMinutesValue = v->getChangeCompleteBlindsDialog()->spinBox_raiseSmallBlindEveryMinutes->value();
+		}
+
+		if(v->getChangeCompleteBlindsDialog()->radioButton_alwaysDoubleBlinds->isChecked()) {
+			gameData.raiseMode = DOUBLE_BLINDS;
+		} else {
+			gameData.raiseMode = MANUAL_BLINDS_ORDER;
+			list<int> tempBlindList;
+			int i;
+			bool ok = true;
+			for(i=0; i<v->getChangeCompleteBlindsDialog()->listWidget_blinds->count(); i++) {
+				tempBlindList.push_back(v->getChangeCompleteBlindsDialog()->listWidget_blinds->item(i)->text().toInt(&ok,10));
+			}
+			gameData.manualBlindsList = tempBlindList;
+
+			if(v->getChangeCompleteBlindsDialog()->radioButton_afterThisAlwaysDoubleBlinds->isChecked()) {
+				gameData.afterManualBlindsMode = AFTERMB_DOUBLE_BLINDS;
+			} else {
+				if(v->getChangeCompleteBlindsDialog()->radioButton_afterThisAlwaysRaiseAbout->isChecked()) {
+					gameData.afterManualBlindsMode = AFTERMB_RAISE_ABOUT;
+					gameData.afterMBAlwaysRaiseValue = v->getChangeCompleteBlindsDialog()->spinBox_afterThisAlwaysRaiseValue->value();
+				} else {
+					gameData.afterManualBlindsMode = AFTERMB_STAY_AT_LAST_BLIND;
+				}
+			}
+		}
+		gameData.guiSpeed = v->spinBox_gameSpeed->value();
+
+
+	} else {
+
+		gameData.maxNumberOfPlayers = myConfig->readConfigInt("NumberOfPlayers");
+		gameData.startMoney = myConfig->readConfigInt("StartCash");
+		gameData.firstSmallBlind =  myConfig->readConfigInt("FirstSmallBlind");
+
+		if(myConfig->readConfigInt("RaiseBlindsAtHands")) {
+			gameData.raiseIntervalMode = RAISE_ON_HANDNUMBER;
+			gameData.raiseSmallBlindEveryHandsValue = myConfig->readConfigInt("RaiseSmallBlindEveryHands");
+		} else {
+			gameData.raiseIntervalMode = RAISE_ON_MINUTES;
+			gameData.raiseSmallBlindEveryMinutesValue = myConfig->readConfigInt("RaiseSmallBlindEveryMinutes");
+		}
+
+		if(myConfig->readConfigInt("AlwaysDoubleBlinds")) {
+			gameData.raiseMode = DOUBLE_BLINDS;
+		} else {
+			gameData.raiseMode = MANUAL_BLINDS_ORDER;
+			gameData.manualBlindsList = myConfig->readConfigIntList("ManualBlindsList");
+
+			if(myConfig->readConfigInt("AfterMBAlwaysDoubleBlinds")) {
+				gameData.afterManualBlindsMode = AFTERMB_DOUBLE_BLINDS;
+			} else {
+				if(myConfig->readConfigInt("AfterMBAlwaysRaiseAbout")) {
+					gameData.afterManualBlindsMode = AFTERMB_RAISE_ABOUT;
+					gameData.afterMBAlwaysRaiseValue = myConfig->readConfigInt("AfterMBAlwaysRaiseValue");
+				} else {
+					gameData.afterManualBlindsMode = AFTERMB_STAY_AT_LAST_BLIND;
+				}
+			}
+		}
+		gameData.guiSpeed = myConfig->readConfigInt("GameSpeed");
+
+	}
+	gameData.delayBetweenHandsSec = 7;
+	gameData.playerActionTimeoutSec = 20;
+
+	myGameLobbyDialog->setSession(getSession());
+	myStartNetworkGameDialog->setSession(getSession());
+
+	myServerGuiInterface->getSession()->startNetworkServer(false);
+	mySession->startNetworkClientForLocalServer(gameData);
+
+	myGuiInterface->getMyW()->show();
+	myGuiInterface->getMyW()->networkGameModification();
+
+	assert(getSession());
+	getSession()->sendStartEvent(true);
+
 }
 
 void startWindowImpl::callGameLobbyDialog()

@@ -83,4 +83,3 @@ void Tools::GetRand(int minValue, int maxValue, unsigned count, int *out)
 		*startPtr++ = gen();
 	}
 }
-

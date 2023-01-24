@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
@@ -26,6 +27,7 @@ void protobuf_AddDesc_chatcleaner_2eproto_impl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
 #else
+void protobuf_AddDesc_chatcleaner_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AddDesc_chatcleaner_2eproto() {
   static bool already_here = false;
   if (already_here) return;
@@ -73,13 +75,18 @@ bool CleanerChatType_IsValid(int value) {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+static ::std::string* MutableUnknownFieldsForCleanerInitMessage(
+    CleanerInitMessage* ptr) {
+  return ptr->mutable_unknown_fields();
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int CleanerInitMessage::kRequestedVersionFieldNumber;
 const int CleanerInitMessage::kClientSecretFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CleanerInitMessage::CleanerInitMessage()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(), _arena_ptr_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:CleanerInitMessage)
 }
@@ -88,7 +95,8 @@ void CleanerInitMessage::InitAsDefaultInstance() {
 }
 
 CleanerInitMessage::CleanerInitMessage(const CleanerInitMessage& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(),
+    _arena_ptr_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:CleanerInitMessage)
@@ -97,8 +105,10 @@ CleanerInitMessage::CleanerInitMessage(const CleanerInitMessage& from)
 void CleanerInitMessage::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  _unknown_fields_.UnsafeSetDefault(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
   requestedversion_ = 0u;
-  clientsecret_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clientsecret_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -108,9 +118,9 @@ CleanerInitMessage::~CleanerInitMessage() {
 }
 
 void CleanerInitMessage::SharedDtor() {
-  if (clientsecret_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete clientsecret_;
-  }
+  _unknown_fields_.DestroyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clientsecret_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
   if (this != &default_instance()) {
   #else
@@ -135,31 +145,36 @@ const CleanerInitMessage& CleanerInitMessage::default_instance() {
 
 CleanerInitMessage* CleanerInitMessage::default_instance_ = NULL;
 
-CleanerInitMessage* CleanerInitMessage::New() const {
-  return new CleanerInitMessage;
+CleanerInitMessage* CleanerInitMessage::New(::google::protobuf::Arena* arena) const {
+  CleanerInitMessage* n = new CleanerInitMessage;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void CleanerInitMessage::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
+// @@protoc_insertion_point(message_clear_start:CleanerInitMessage)
+  if (_has_bits_[0 / 32] & 3u) {
     requestedversion_ = 0u;
     if (has_clientsecret()) {
-      if (clientsecret_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        clientsecret_->clear();
-      }
+      clientsecret_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  _unknown_fields_.ClearToEmptyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 bool CleanerInitMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(
+          &MutableUnknownFieldsForCleanerInitMessage, this));
   ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:CleanerInitMessage)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -230,28 +245,47 @@ void CleanerInitMessage::SerializeWithCachedSizes(
   }
 
   output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+                   static_cast<int>(unknown_fields().size()));
   // @@protoc_insertion_point(serialize_end:CleanerInitMessage)
 }
 
-int CleanerInitMessage::ByteSize() const {
+int CleanerInitMessage::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:CleanerInitMessage)
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (has_requestedversion()) {
     // required uint32 requestedVersion = 1;
-    if (has_requestedversion()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->requestedversion());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->requestedversion());
+  }
+
+  if (has_clientsecret()) {
+    // required string clientSecret = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->clientsecret());
+  }
+
+  return total_size;
+}
+int CleanerInitMessage::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:CleanerInitMessage)
+  int total_size = 0;
+
+  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
+    // required uint32 requestedVersion = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->requestedversion());
 
     // required string clientSecret = 2;
-    if (has_clientsecret()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->clientsecret());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->clientsecret());
 
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
   }
   total_size += unknown_fields().size();
 
@@ -267,19 +301,26 @@ void CleanerInitMessage::CheckTypeAndMergeFrom(
 }
 
 void CleanerInitMessage::MergeFrom(const CleanerInitMessage& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:CleanerInitMessage)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_requestedversion()) {
       set_requestedversion(from.requestedversion());
     }
     if (from.has_clientsecret()) {
-      set_clientsecret(from.clientsecret());
+      set_has_clientsecret();
+      clientsecret_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.clientsecret_);
     }
   }
-  mutable_unknown_fields()->append(from.unknown_fields());
+  if (!from.unknown_fields().empty()) {
+    mutable_unknown_fields()->append(from.unknown_fields());
+  }
 }
 
 void CleanerInitMessage::CopyFrom(const CleanerInitMessage& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:CleanerInitMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -292,29 +333,118 @@ bool CleanerInitMessage::IsInitialized() const {
 }
 
 void CleanerInitMessage::Swap(CleanerInitMessage* other) {
-  if (other != this) {
-    std::swap(requestedversion_, other->requestedversion_);
-    std::swap(clientsecret_, other->clientsecret_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void CleanerInitMessage::InternalSwap(CleanerInitMessage* other) {
+  std::swap(requestedversion_, other->requestedversion_);
+  clientsecret_.Swap(&other->clientsecret_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  _unknown_fields_.Swap(&other->_unknown_fields_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string CleanerInitMessage::GetTypeName() const {
   return "CleanerInitMessage";
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// CleanerInitMessage
+
+// required uint32 requestedVersion = 1;
+bool CleanerInitMessage::has_requestedversion() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void CleanerInitMessage::set_has_requestedversion() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void CleanerInitMessage::clear_has_requestedversion() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void CleanerInitMessage::clear_requestedversion() {
+  requestedversion_ = 0u;
+  clear_has_requestedversion();
+}
+ ::google::protobuf::uint32 CleanerInitMessage::requestedversion() const {
+  // @@protoc_insertion_point(field_get:CleanerInitMessage.requestedVersion)
+  return requestedversion_;
+}
+ void CleanerInitMessage::set_requestedversion(::google::protobuf::uint32 value) {
+  set_has_requestedversion();
+  requestedversion_ = value;
+  // @@protoc_insertion_point(field_set:CleanerInitMessage.requestedVersion)
+}
+
+// required string clientSecret = 2;
+bool CleanerInitMessage::has_clientsecret() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void CleanerInitMessage::set_has_clientsecret() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void CleanerInitMessage::clear_has_clientsecret() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void CleanerInitMessage::clear_clientsecret() {
+  clientsecret_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_clientsecret();
+}
+ const ::std::string& CleanerInitMessage::clientsecret() const {
+  // @@protoc_insertion_point(field_get:CleanerInitMessage.clientSecret)
+  return clientsecret_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerInitMessage::set_clientsecret(const ::std::string& value) {
+  set_has_clientsecret();
+  clientsecret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:CleanerInitMessage.clientSecret)
+}
+ void CleanerInitMessage::set_clientsecret(const char* value) {
+  set_has_clientsecret();
+  clientsecret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:CleanerInitMessage.clientSecret)
+}
+ void CleanerInitMessage::set_clientsecret(const char* value, size_t size) {
+  set_has_clientsecret();
+  clientsecret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:CleanerInitMessage.clientSecret)
+}
+ ::std::string* CleanerInitMessage::mutable_clientsecret() {
+  set_has_clientsecret();
+  // @@protoc_insertion_point(field_mutable:CleanerInitMessage.clientSecret)
+  return clientsecret_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* CleanerInitMessage::release_clientsecret() {
+  // @@protoc_insertion_point(field_release:CleanerInitMessage.clientSecret)
+  clear_has_clientsecret();
+  return clientsecret_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerInitMessage::set_allocated_clientsecret(::std::string* clientsecret) {
+  if (clientsecret != NULL) {
+    set_has_clientsecret();
+  } else {
+    clear_has_clientsecret();
+  }
+  clientsecret_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), clientsecret);
+  // @@protoc_insertion_point(field_set_allocated:CleanerInitMessage.clientSecret)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
-#ifndef _MSC_VER
+static ::std::string* MutableUnknownFieldsForCleanerInitAckMessage(
+    CleanerInitAckMessage* ptr) {
+  return ptr->mutable_unknown_fields();
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int CleanerInitAckMessage::kServerVersionFieldNumber;
 const int CleanerInitAckMessage::kServerSecretFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CleanerInitAckMessage::CleanerInitAckMessage()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(), _arena_ptr_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:CleanerInitAckMessage)
 }
@@ -323,7 +453,8 @@ void CleanerInitAckMessage::InitAsDefaultInstance() {
 }
 
 CleanerInitAckMessage::CleanerInitAckMessage(const CleanerInitAckMessage& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(),
+    _arena_ptr_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:CleanerInitAckMessage)
@@ -332,8 +463,10 @@ CleanerInitAckMessage::CleanerInitAckMessage(const CleanerInitAckMessage& from)
 void CleanerInitAckMessage::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  _unknown_fields_.UnsafeSetDefault(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
   serverversion_ = 0u;
-  serversecret_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  serversecret_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -343,9 +476,9 @@ CleanerInitAckMessage::~CleanerInitAckMessage() {
 }
 
 void CleanerInitAckMessage::SharedDtor() {
-  if (serversecret_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete serversecret_;
-  }
+  _unknown_fields_.DestroyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  serversecret_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
   if (this != &default_instance()) {
   #else
@@ -370,31 +503,36 @@ const CleanerInitAckMessage& CleanerInitAckMessage::default_instance() {
 
 CleanerInitAckMessage* CleanerInitAckMessage::default_instance_ = NULL;
 
-CleanerInitAckMessage* CleanerInitAckMessage::New() const {
-  return new CleanerInitAckMessage;
+CleanerInitAckMessage* CleanerInitAckMessage::New(::google::protobuf::Arena* arena) const {
+  CleanerInitAckMessage* n = new CleanerInitAckMessage;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void CleanerInitAckMessage::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
+// @@protoc_insertion_point(message_clear_start:CleanerInitAckMessage)
+  if (_has_bits_[0 / 32] & 3u) {
     serverversion_ = 0u;
     if (has_serversecret()) {
-      if (serversecret_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        serversecret_->clear();
-      }
+      serversecret_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  _unknown_fields_.ClearToEmptyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 bool CleanerInitAckMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(
+          &MutableUnknownFieldsForCleanerInitAckMessage, this));
   ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:CleanerInitAckMessage)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -465,28 +603,47 @@ void CleanerInitAckMessage::SerializeWithCachedSizes(
   }
 
   output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+                   static_cast<int>(unknown_fields().size()));
   // @@protoc_insertion_point(serialize_end:CleanerInitAckMessage)
 }
 
-int CleanerInitAckMessage::ByteSize() const {
+int CleanerInitAckMessage::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:CleanerInitAckMessage)
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (has_serverversion()) {
     // required uint32 serverVersion = 1;
-    if (has_serverversion()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->serverversion());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->serverversion());
+  }
+
+  if (has_serversecret()) {
+    // required string serverSecret = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->serversecret());
+  }
+
+  return total_size;
+}
+int CleanerInitAckMessage::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:CleanerInitAckMessage)
+  int total_size = 0;
+
+  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
+    // required uint32 serverVersion = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->serverversion());
 
     // required string serverSecret = 2;
-    if (has_serversecret()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->serversecret());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->serversecret());
 
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
   }
   total_size += unknown_fields().size();
 
@@ -502,19 +659,26 @@ void CleanerInitAckMessage::CheckTypeAndMergeFrom(
 }
 
 void CleanerInitAckMessage::MergeFrom(const CleanerInitAckMessage& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:CleanerInitAckMessage)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_serverversion()) {
       set_serverversion(from.serverversion());
     }
     if (from.has_serversecret()) {
-      set_serversecret(from.serversecret());
+      set_has_serversecret();
+      serversecret_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.serversecret_);
     }
   }
-  mutable_unknown_fields()->append(from.unknown_fields());
+  if (!from.unknown_fields().empty()) {
+    mutable_unknown_fields()->append(from.unknown_fields());
+  }
 }
 
 void CleanerInitAckMessage::CopyFrom(const CleanerInitAckMessage& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:CleanerInitAckMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -527,33 +691,122 @@ bool CleanerInitAckMessage::IsInitialized() const {
 }
 
 void CleanerInitAckMessage::Swap(CleanerInitAckMessage* other) {
-  if (other != this) {
-    std::swap(serverversion_, other->serverversion_);
-    std::swap(serversecret_, other->serversecret_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void CleanerInitAckMessage::InternalSwap(CleanerInitAckMessage* other) {
+  std::swap(serverversion_, other->serverversion_);
+  serversecret_.Swap(&other->serversecret_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  _unknown_fields_.Swap(&other->_unknown_fields_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string CleanerInitAckMessage::GetTypeName() const {
   return "CleanerInitAckMessage";
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// CleanerInitAckMessage
+
+// required uint32 serverVersion = 1;
+bool CleanerInitAckMessage::has_serverversion() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void CleanerInitAckMessage::set_has_serverversion() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void CleanerInitAckMessage::clear_has_serverversion() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void CleanerInitAckMessage::clear_serverversion() {
+  serverversion_ = 0u;
+  clear_has_serverversion();
+}
+ ::google::protobuf::uint32 CleanerInitAckMessage::serverversion() const {
+  // @@protoc_insertion_point(field_get:CleanerInitAckMessage.serverVersion)
+  return serverversion_;
+}
+ void CleanerInitAckMessage::set_serverversion(::google::protobuf::uint32 value) {
+  set_has_serverversion();
+  serverversion_ = value;
+  // @@protoc_insertion_point(field_set:CleanerInitAckMessage.serverVersion)
+}
+
+// required string serverSecret = 2;
+bool CleanerInitAckMessage::has_serversecret() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void CleanerInitAckMessage::set_has_serversecret() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void CleanerInitAckMessage::clear_has_serversecret() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void CleanerInitAckMessage::clear_serversecret() {
+  serversecret_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_serversecret();
+}
+ const ::std::string& CleanerInitAckMessage::serversecret() const {
+  // @@protoc_insertion_point(field_get:CleanerInitAckMessage.serverSecret)
+  return serversecret_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerInitAckMessage::set_serversecret(const ::std::string& value) {
+  set_has_serversecret();
+  serversecret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:CleanerInitAckMessage.serverSecret)
+}
+ void CleanerInitAckMessage::set_serversecret(const char* value) {
+  set_has_serversecret();
+  serversecret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:CleanerInitAckMessage.serverSecret)
+}
+ void CleanerInitAckMessage::set_serversecret(const char* value, size_t size) {
+  set_has_serversecret();
+  serversecret_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:CleanerInitAckMessage.serverSecret)
+}
+ ::std::string* CleanerInitAckMessage::mutable_serversecret() {
+  set_has_serversecret();
+  // @@protoc_insertion_point(field_mutable:CleanerInitAckMessage.serverSecret)
+  return serversecret_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* CleanerInitAckMessage::release_serversecret() {
+  // @@protoc_insertion_point(field_release:CleanerInitAckMessage.serverSecret)
+  clear_has_serversecret();
+  return serversecret_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerInitAckMessage::set_allocated_serversecret(::std::string* serversecret) {
+  if (serversecret != NULL) {
+    set_has_serversecret();
+  } else {
+    clear_has_serversecret();
+  }
+  serversecret_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), serversecret);
+  // @@protoc_insertion_point(field_set_allocated:CleanerInitAckMessage.serverSecret)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
 
-#ifndef _MSC_VER
+static ::std::string* MutableUnknownFieldsForCleanerChatRequestMessage(
+    CleanerChatRequestMessage* ptr) {
+  return ptr->mutable_unknown_fields();
+}
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int CleanerChatRequestMessage::kRequestIdFieldNumber;
 const int CleanerChatRequestMessage::kCleanerChatTypeFieldNumber;
 const int CleanerChatRequestMessage::kGameIdFieldNumber;
 const int CleanerChatRequestMessage::kPlayerIdFieldNumber;
 const int CleanerChatRequestMessage::kPlayerNameFieldNumber;
 const int CleanerChatRequestMessage::kChatMessageFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CleanerChatRequestMessage::CleanerChatRequestMessage()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(), _arena_ptr_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:CleanerChatRequestMessage)
 }
@@ -562,7 +815,8 @@ void CleanerChatRequestMessage::InitAsDefaultInstance() {
 }
 
 CleanerChatRequestMessage::CleanerChatRequestMessage(const CleanerChatRequestMessage& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(),
+    _arena_ptr_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:CleanerChatRequestMessage)
@@ -571,12 +825,14 @@ CleanerChatRequestMessage::CleanerChatRequestMessage(const CleanerChatRequestMes
 void CleanerChatRequestMessage::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  _unknown_fields_.UnsafeSetDefault(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
   requestid_ = 0u;
   cleanerchattype_ = 0;
   gameid_ = 0u;
   playerid_ = 0u;
-  playername_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  chatmessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  playername_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  chatmessage_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -586,12 +842,10 @@ CleanerChatRequestMessage::~CleanerChatRequestMessage() {
 }
 
 void CleanerChatRequestMessage::SharedDtor() {
-  if (playername_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete playername_;
-  }
-  if (chatmessage_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete chatmessage_;
-  }
+  _unknown_fields_.DestroyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  playername_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  chatmessage_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
   if (this != &default_instance()) {
   #else
@@ -616,50 +870,59 @@ const CleanerChatRequestMessage& CleanerChatRequestMessage::default_instance() {
 
 CleanerChatRequestMessage* CleanerChatRequestMessage::default_instance_ = NULL;
 
-CleanerChatRequestMessage* CleanerChatRequestMessage::New() const {
-  return new CleanerChatRequestMessage;
+CleanerChatRequestMessage* CleanerChatRequestMessage::New(::google::protobuf::Arena* arena) const {
+  CleanerChatRequestMessage* n = new CleanerChatRequestMessage;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void CleanerChatRequestMessage::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<CleanerChatRequestMessage*>(16)->f) - \
-   reinterpret_cast<char*>(16))
+// @@protoc_insertion_point(message_clear_start:CleanerChatRequestMessage)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(CleanerChatRequestMessage, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<CleanerChatRequestMessage*>(16)->f)
+#endif
 
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
 
-  if (_has_bits_[0 / 32] & 63) {
+  if (_has_bits_[0 / 32] & 63u) {
     ZR_(requestid_, playerid_);
     if (has_playername()) {
-      if (playername_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        playername_->clear();
-      }
+      playername_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
     if (has_chatmessage()) {
-      if (chatmessage_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        chatmessage_->clear();
-      }
+      chatmessage_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
 
-#undef OFFSET_OF_FIELD_
+#undef ZR_HELPER_
 #undef ZR_
 
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  _unknown_fields_.ClearToEmptyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 bool CleanerChatRequestMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(
+          &MutableUnknownFieldsForCleanerChatRequestMessage, this));
   ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:CleanerChatRequestMessage)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -691,7 +954,7 @@ bool CleanerChatRequestMessage::MergePartialFromCodedStream(
           if (::CleanerChatType_IsValid(value)) {
             set_cleanerchattype(static_cast< ::CleanerChatType >(value));
           } else {
-            unknown_fields_stream.WriteVarint32(tag);
+            unknown_fields_stream.WriteVarint32(16);
             unknown_fields_stream.WriteVarint32(value);
           }
         } else {
@@ -816,56 +1079,89 @@ void CleanerChatRequestMessage::SerializeWithCachedSizes(
   }
 
   output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+                   static_cast<int>(unknown_fields().size()));
   // @@protoc_insertion_point(serialize_end:CleanerChatRequestMessage)
 }
 
-int CleanerChatRequestMessage::ByteSize() const {
+int CleanerChatRequestMessage::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:CleanerChatRequestMessage)
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (has_requestid()) {
     // required uint32 requestId = 1;
-    if (has_requestid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->requestid());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->requestid());
+  }
+
+  if (has_cleanerchattype()) {
+    // required .CleanerChatType cleanerChatType = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleanerchattype());
+  }
+
+  if (has_playerid()) {
+    // required uint32 playerId = 4;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->playerid());
+  }
+
+  if (has_playername()) {
+    // required string playerName = 5;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->playername());
+  }
+
+  if (has_chatmessage()) {
+    // required string chatMessage = 6;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->chatmessage());
+  }
+
+  return total_size;
+}
+int CleanerChatRequestMessage::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:CleanerChatRequestMessage)
+  int total_size = 0;
+
+  if (((_has_bits_[0] & 0x0000003b) ^ 0x0000003b) == 0) {  // All required fields are present.
+    // required uint32 requestId = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->requestid());
 
     // required .CleanerChatType cleanerChatType = 2;
-    if (has_cleanerchattype()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleanerchattype());
-    }
-
-    // optional uint32 gameId = 3 [default = 0];
-    if (has_gameid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->gameid());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleanerchattype());
 
     // required uint32 playerId = 4;
-    if (has_playerid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->playerid());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->playerid());
 
     // required string playerName = 5;
-    if (has_playername()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->playername());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->playername());
 
     // required string chatMessage = 6;
-    if (has_chatmessage()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->chatmessage());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->chatmessage());
 
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
   }
+  // optional uint32 gameId = 3 [default = 0];
+  if (has_gameid()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->gameid());
+  }
+
   total_size += unknown_fields().size();
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -880,7 +1176,10 @@ void CleanerChatRequestMessage::CheckTypeAndMergeFrom(
 }
 
 void CleanerChatRequestMessage::MergeFrom(const CleanerChatRequestMessage& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:CleanerChatRequestMessage)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_requestid()) {
       set_requestid(from.requestid());
@@ -895,16 +1194,21 @@ void CleanerChatRequestMessage::MergeFrom(const CleanerChatRequestMessage& from)
       set_playerid(from.playerid());
     }
     if (from.has_playername()) {
-      set_playername(from.playername());
+      set_has_playername();
+      playername_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.playername_);
     }
     if (from.has_chatmessage()) {
-      set_chatmessage(from.chatmessage());
+      set_has_chatmessage();
+      chatmessage_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.chatmessage_);
     }
   }
-  mutable_unknown_fields()->append(from.unknown_fields());
+  if (!from.unknown_fields().empty()) {
+    mutable_unknown_fields()->append(from.unknown_fields());
+  }
 }
 
 void CleanerChatRequestMessage::CopyFrom(const CleanerChatRequestMessage& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:CleanerChatRequestMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -917,25 +1221,241 @@ bool CleanerChatRequestMessage::IsInitialized() const {
 }
 
 void CleanerChatRequestMessage::Swap(CleanerChatRequestMessage* other) {
-  if (other != this) {
-    std::swap(requestid_, other->requestid_);
-    std::swap(cleanerchattype_, other->cleanerchattype_);
-    std::swap(gameid_, other->gameid_);
-    std::swap(playerid_, other->playerid_);
-    std::swap(playername_, other->playername_);
-    std::swap(chatmessage_, other->chatmessage_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void CleanerChatRequestMessage::InternalSwap(CleanerChatRequestMessage* other) {
+  std::swap(requestid_, other->requestid_);
+  std::swap(cleanerchattype_, other->cleanerchattype_);
+  std::swap(gameid_, other->gameid_);
+  std::swap(playerid_, other->playerid_);
+  playername_.Swap(&other->playername_);
+  chatmessage_.Swap(&other->chatmessage_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  _unknown_fields_.Swap(&other->_unknown_fields_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string CleanerChatRequestMessage::GetTypeName() const {
   return "CleanerChatRequestMessage";
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// CleanerChatRequestMessage
+
+// required uint32 requestId = 1;
+bool CleanerChatRequestMessage::has_requestid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void CleanerChatRequestMessage::set_has_requestid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void CleanerChatRequestMessage::clear_has_requestid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void CleanerChatRequestMessage::clear_requestid() {
+  requestid_ = 0u;
+  clear_has_requestid();
+}
+ ::google::protobuf::uint32 CleanerChatRequestMessage::requestid() const {
+  // @@protoc_insertion_point(field_get:CleanerChatRequestMessage.requestId)
+  return requestid_;
+}
+ void CleanerChatRequestMessage::set_requestid(::google::protobuf::uint32 value) {
+  set_has_requestid();
+  requestid_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatRequestMessage.requestId)
+}
+
+// required .CleanerChatType cleanerChatType = 2;
+bool CleanerChatRequestMessage::has_cleanerchattype() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void CleanerChatRequestMessage::set_has_cleanerchattype() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void CleanerChatRequestMessage::clear_has_cleanerchattype() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void CleanerChatRequestMessage::clear_cleanerchattype() {
+  cleanerchattype_ = 0;
+  clear_has_cleanerchattype();
+}
+ ::CleanerChatType CleanerChatRequestMessage::cleanerchattype() const {
+  // @@protoc_insertion_point(field_get:CleanerChatRequestMessage.cleanerChatType)
+  return static_cast< ::CleanerChatType >(cleanerchattype_);
+}
+ void CleanerChatRequestMessage::set_cleanerchattype(::CleanerChatType value) {
+  assert(::CleanerChatType_IsValid(value));
+  set_has_cleanerchattype();
+  cleanerchattype_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatRequestMessage.cleanerChatType)
+}
+
+// optional uint32 gameId = 3 [default = 0];
+bool CleanerChatRequestMessage::has_gameid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+void CleanerChatRequestMessage::set_has_gameid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+void CleanerChatRequestMessage::clear_has_gameid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+void CleanerChatRequestMessage::clear_gameid() {
+  gameid_ = 0u;
+  clear_has_gameid();
+}
+ ::google::protobuf::uint32 CleanerChatRequestMessage::gameid() const {
+  // @@protoc_insertion_point(field_get:CleanerChatRequestMessage.gameId)
+  return gameid_;
+}
+ void CleanerChatRequestMessage::set_gameid(::google::protobuf::uint32 value) {
+  set_has_gameid();
+  gameid_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatRequestMessage.gameId)
+}
+
+// required uint32 playerId = 4;
+bool CleanerChatRequestMessage::has_playerid() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+void CleanerChatRequestMessage::set_has_playerid() {
+  _has_bits_[0] |= 0x00000008u;
+}
+void CleanerChatRequestMessage::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+void CleanerChatRequestMessage::clear_playerid() {
+  playerid_ = 0u;
+  clear_has_playerid();
+}
+ ::google::protobuf::uint32 CleanerChatRequestMessage::playerid() const {
+  // @@protoc_insertion_point(field_get:CleanerChatRequestMessage.playerId)
+  return playerid_;
+}
+ void CleanerChatRequestMessage::set_playerid(::google::protobuf::uint32 value) {
+  set_has_playerid();
+  playerid_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatRequestMessage.playerId)
+}
+
+// required string playerName = 5;
+bool CleanerChatRequestMessage::has_playername() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+void CleanerChatRequestMessage::set_has_playername() {
+  _has_bits_[0] |= 0x00000010u;
+}
+void CleanerChatRequestMessage::clear_has_playername() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+void CleanerChatRequestMessage::clear_playername() {
+  playername_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_playername();
+}
+ const ::std::string& CleanerChatRequestMessage::playername() const {
+  // @@protoc_insertion_point(field_get:CleanerChatRequestMessage.playerName)
+  return playername_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerChatRequestMessage::set_playername(const ::std::string& value) {
+  set_has_playername();
+  playername_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:CleanerChatRequestMessage.playerName)
+}
+ void CleanerChatRequestMessage::set_playername(const char* value) {
+  set_has_playername();
+  playername_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:CleanerChatRequestMessage.playerName)
+}
+ void CleanerChatRequestMessage::set_playername(const char* value, size_t size) {
+  set_has_playername();
+  playername_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:CleanerChatRequestMessage.playerName)
+}
+ ::std::string* CleanerChatRequestMessage::mutable_playername() {
+  set_has_playername();
+  // @@protoc_insertion_point(field_mutable:CleanerChatRequestMessage.playerName)
+  return playername_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* CleanerChatRequestMessage::release_playername() {
+  // @@protoc_insertion_point(field_release:CleanerChatRequestMessage.playerName)
+  clear_has_playername();
+  return playername_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerChatRequestMessage::set_allocated_playername(::std::string* playername) {
+  if (playername != NULL) {
+    set_has_playername();
+  } else {
+    clear_has_playername();
+  }
+  playername_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), playername);
+  // @@protoc_insertion_point(field_set_allocated:CleanerChatRequestMessage.playerName)
+}
+
+// required string chatMessage = 6;
+bool CleanerChatRequestMessage::has_chatmessage() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+void CleanerChatRequestMessage::set_has_chatmessage() {
+  _has_bits_[0] |= 0x00000020u;
+}
+void CleanerChatRequestMessage::clear_has_chatmessage() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+void CleanerChatRequestMessage::clear_chatmessage() {
+  chatmessage_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_chatmessage();
+}
+ const ::std::string& CleanerChatRequestMessage::chatmessage() const {
+  // @@protoc_insertion_point(field_get:CleanerChatRequestMessage.chatMessage)
+  return chatmessage_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerChatRequestMessage::set_chatmessage(const ::std::string& value) {
+  set_has_chatmessage();
+  chatmessage_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:CleanerChatRequestMessage.chatMessage)
+}
+ void CleanerChatRequestMessage::set_chatmessage(const char* value) {
+  set_has_chatmessage();
+  chatmessage_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:CleanerChatRequestMessage.chatMessage)
+}
+ void CleanerChatRequestMessage::set_chatmessage(const char* value, size_t size) {
+  set_has_chatmessage();
+  chatmessage_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:CleanerChatRequestMessage.chatMessage)
+}
+ ::std::string* CleanerChatRequestMessage::mutable_chatmessage() {
+  set_has_chatmessage();
+  // @@protoc_insertion_point(field_mutable:CleanerChatRequestMessage.chatMessage)
+  return chatmessage_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* CleanerChatRequestMessage::release_chatmessage() {
+  // @@protoc_insertion_point(field_release:CleanerChatRequestMessage.chatMessage)
+  clear_has_chatmessage();
+  return chatmessage_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerChatRequestMessage::set_allocated_chatmessage(::std::string* chatmessage) {
+  if (chatmessage != NULL) {
+    set_has_chatmessage();
+  } else {
+    clear_has_chatmessage();
+  }
+  chatmessage_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), chatmessage);
+  // @@protoc_insertion_point(field_set_allocated:CleanerChatRequestMessage.chatMessage)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
+
+static ::std::string* MutableUnknownFieldsForCleanerChatReplyMessage(
+    CleanerChatReplyMessage* ptr) {
+  return ptr->mutable_unknown_fields();
+}
 
 bool CleanerChatReplyMessage_CleanerActionType_IsValid(int value) {
   switch(value) {
@@ -950,7 +1470,7 @@ bool CleanerChatReplyMessage_CleanerActionType_IsValid(int value) {
   }
 }
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const CleanerChatReplyMessage_CleanerActionType CleanerChatReplyMessage::cleanerActionNone;
 const CleanerChatReplyMessage_CleanerActionType CleanerChatReplyMessage::cleanerActionWarning;
 const CleanerChatReplyMessage_CleanerActionType CleanerChatReplyMessage::cleanerActionKick;
@@ -959,18 +1479,18 @@ const CleanerChatReplyMessage_CleanerActionType CleanerChatReplyMessage::cleaner
 const CleanerChatReplyMessage_CleanerActionType CleanerChatReplyMessage::CleanerActionType_MIN;
 const CleanerChatReplyMessage_CleanerActionType CleanerChatReplyMessage::CleanerActionType_MAX;
 const int CleanerChatReplyMessage::CleanerActionType_ARRAYSIZE;
-#endif  // _MSC_VER
-#ifndef _MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int CleanerChatReplyMessage::kRequestIdFieldNumber;
 const int CleanerChatReplyMessage::kCleanerChatTypeFieldNumber;
 const int CleanerChatReplyMessage::kGameIdFieldNumber;
 const int CleanerChatReplyMessage::kPlayerIdFieldNumber;
 const int CleanerChatReplyMessage::kCleanerActionTypeFieldNumber;
 const int CleanerChatReplyMessage::kCleanerTextFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CleanerChatReplyMessage::CleanerChatReplyMessage()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(), _arena_ptr_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:CleanerChatReplyMessage)
 }
@@ -979,7 +1499,8 @@ void CleanerChatReplyMessage::InitAsDefaultInstance() {
 }
 
 CleanerChatReplyMessage::CleanerChatReplyMessage(const CleanerChatReplyMessage& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(),
+    _arena_ptr_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:CleanerChatReplyMessage)
@@ -988,12 +1509,14 @@ CleanerChatReplyMessage::CleanerChatReplyMessage(const CleanerChatReplyMessage& 
 void CleanerChatReplyMessage::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  _unknown_fields_.UnsafeSetDefault(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
   requestid_ = 0u;
   cleanerchattype_ = 0;
   gameid_ = 0u;
   playerid_ = 0u;
   cleaneractiontype_ = 0;
-  cleanertext_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  cleanertext_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1003,9 +1526,9 @@ CleanerChatReplyMessage::~CleanerChatReplyMessage() {
 }
 
 void CleanerChatReplyMessage::SharedDtor() {
-  if (cleanertext_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-    delete cleanertext_;
-  }
+  _unknown_fields_.DestroyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  cleanertext_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
   if (this != &default_instance()) {
   #else
@@ -1030,46 +1553,57 @@ const CleanerChatReplyMessage& CleanerChatReplyMessage::default_instance() {
 
 CleanerChatReplyMessage* CleanerChatReplyMessage::default_instance_ = NULL;
 
-CleanerChatReplyMessage* CleanerChatReplyMessage::New() const {
-  return new CleanerChatReplyMessage;
+CleanerChatReplyMessage* CleanerChatReplyMessage::New(::google::protobuf::Arena* arena) const {
+  CleanerChatReplyMessage* n = new CleanerChatReplyMessage;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void CleanerChatReplyMessage::Clear() {
-#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<CleanerChatReplyMessage*>(16)->f) - \
-   reinterpret_cast<char*>(16))
+// @@protoc_insertion_point(message_clear_start:CleanerChatReplyMessage)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(CleanerChatReplyMessage, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<CleanerChatReplyMessage*>(16)->f)
+#endif
 
-#define ZR_(first, last) do {                              \
-    size_t f = OFFSET_OF_FIELD_(first);                    \
-    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
-    ::memset(&first, 0, n);                                \
-  } while (0)
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
 
-  if (_has_bits_[0 / 32] & 63) {
+  if (_has_bits_[0 / 32] & 63u) {
     ZR_(requestid_, playerid_);
     cleaneractiontype_ = 0;
     if (has_cleanertext()) {
-      if (cleanertext_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-        cleanertext_->clear();
-      }
+      cleanertext_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
 
-#undef OFFSET_OF_FIELD_
+#undef ZR_HELPER_
 #undef ZR_
 
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  _unknown_fields_.ClearToEmptyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 bool CleanerChatReplyMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(
+          &MutableUnknownFieldsForCleanerChatReplyMessage, this));
   ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:CleanerChatReplyMessage)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -1101,7 +1635,7 @@ bool CleanerChatReplyMessage::MergePartialFromCodedStream(
           if (::CleanerChatType_IsValid(value)) {
             set_cleanerchattype(static_cast< ::CleanerChatType >(value));
           } else {
-            unknown_fields_stream.WriteVarint32(tag);
+            unknown_fields_stream.WriteVarint32(16);
             unknown_fields_stream.WriteVarint32(value);
           }
         } else {
@@ -1152,7 +1686,7 @@ bool CleanerChatReplyMessage::MergePartialFromCodedStream(
           if (::CleanerChatReplyMessage_CleanerActionType_IsValid(value)) {
             set_cleaneractiontype(static_cast< ::CleanerChatReplyMessage_CleanerActionType >(value));
           } else {
-            unknown_fields_stream.WriteVarint32(tag);
+            unknown_fields_stream.WriteVarint32(40);
             unknown_fields_stream.WriteVarint32(value);
           }
         } else {
@@ -1234,45 +1768,74 @@ void CleanerChatReplyMessage::SerializeWithCachedSizes(
   }
 
   output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+                   static_cast<int>(unknown_fields().size()));
   // @@protoc_insertion_point(serialize_end:CleanerChatReplyMessage)
 }
 
-int CleanerChatReplyMessage::ByteSize() const {
+int CleanerChatReplyMessage::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:CleanerChatReplyMessage)
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (has_requestid()) {
     // required uint32 requestId = 1;
-    if (has_requestid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->requestid());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->requestid());
+  }
+
+  if (has_cleanerchattype()) {
+    // required .CleanerChatType cleanerChatType = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleanerchattype());
+  }
+
+  if (has_playerid()) {
+    // required uint32 playerId = 4;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->playerid());
+  }
+
+  if (has_cleaneractiontype()) {
+    // required .CleanerChatReplyMessage.CleanerActionType cleanerActionType = 5;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleaneractiontype());
+  }
+
+  return total_size;
+}
+int CleanerChatReplyMessage::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:CleanerChatReplyMessage)
+  int total_size = 0;
+
+  if (((_has_bits_[0] & 0x0000001b) ^ 0x0000001b) == 0) {  // All required fields are present.
+    // required uint32 requestId = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->requestid());
 
     // required .CleanerChatType cleanerChatType = 2;
-    if (has_cleanerchattype()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleanerchattype());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleanerchattype());
 
+    // required uint32 playerId = 4;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->playerid());
+
+    // required .CleanerChatReplyMessage.CleanerActionType cleanerActionType = 5;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleaneractiontype());
+
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
+  }
+  if (_has_bits_[2 / 32] & 36u) {
     // optional uint32 gameId = 3 [default = 0];
     if (has_gameid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->gameid());
-    }
-
-    // required uint32 playerId = 4;
-    if (has_playerid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->playerid());
-    }
-
-    // required .CleanerChatReplyMessage.CleanerActionType cleanerActionType = 5;
-    if (has_cleaneractiontype()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->cleaneractiontype());
     }
 
     // optional string cleanerText = 6 [default = ""];
@@ -1297,7 +1860,10 @@ void CleanerChatReplyMessage::CheckTypeAndMergeFrom(
 }
 
 void CleanerChatReplyMessage::MergeFrom(const CleanerChatReplyMessage& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:CleanerChatReplyMessage)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_requestid()) {
       set_requestid(from.requestid());
@@ -1315,13 +1881,17 @@ void CleanerChatReplyMessage::MergeFrom(const CleanerChatReplyMessage& from) {
       set_cleaneractiontype(from.cleaneractiontype());
     }
     if (from.has_cleanertext()) {
-      set_cleanertext(from.cleanertext());
+      set_has_cleanertext();
+      cleanertext_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.cleanertext_);
     }
   }
-  mutable_unknown_fields()->append(from.unknown_fields());
+  if (!from.unknown_fields().empty()) {
+    mutable_unknown_fields()->append(from.unknown_fields());
+  }
 }
 
 void CleanerChatReplyMessage::CopyFrom(const CleanerChatReplyMessage& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:CleanerChatReplyMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1334,25 +1904,212 @@ bool CleanerChatReplyMessage::IsInitialized() const {
 }
 
 void CleanerChatReplyMessage::Swap(CleanerChatReplyMessage* other) {
-  if (other != this) {
-    std::swap(requestid_, other->requestid_);
-    std::swap(cleanerchattype_, other->cleanerchattype_);
-    std::swap(gameid_, other->gameid_);
-    std::swap(playerid_, other->playerid_);
-    std::swap(cleaneractiontype_, other->cleaneractiontype_);
-    std::swap(cleanertext_, other->cleanertext_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void CleanerChatReplyMessage::InternalSwap(CleanerChatReplyMessage* other) {
+  std::swap(requestid_, other->requestid_);
+  std::swap(cleanerchattype_, other->cleanerchattype_);
+  std::swap(gameid_, other->gameid_);
+  std::swap(playerid_, other->playerid_);
+  std::swap(cleaneractiontype_, other->cleaneractiontype_);
+  cleanertext_.Swap(&other->cleanertext_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  _unknown_fields_.Swap(&other->_unknown_fields_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string CleanerChatReplyMessage::GetTypeName() const {
   return "CleanerChatReplyMessage";
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// CleanerChatReplyMessage
+
+// required uint32 requestId = 1;
+bool CleanerChatReplyMessage::has_requestid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void CleanerChatReplyMessage::set_has_requestid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void CleanerChatReplyMessage::clear_has_requestid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void CleanerChatReplyMessage::clear_requestid() {
+  requestid_ = 0u;
+  clear_has_requestid();
+}
+ ::google::protobuf::uint32 CleanerChatReplyMessage::requestid() const {
+  // @@protoc_insertion_point(field_get:CleanerChatReplyMessage.requestId)
+  return requestid_;
+}
+ void CleanerChatReplyMessage::set_requestid(::google::protobuf::uint32 value) {
+  set_has_requestid();
+  requestid_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatReplyMessage.requestId)
+}
+
+// required .CleanerChatType cleanerChatType = 2;
+bool CleanerChatReplyMessage::has_cleanerchattype() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void CleanerChatReplyMessage::set_has_cleanerchattype() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void CleanerChatReplyMessage::clear_has_cleanerchattype() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void CleanerChatReplyMessage::clear_cleanerchattype() {
+  cleanerchattype_ = 0;
+  clear_has_cleanerchattype();
+}
+ ::CleanerChatType CleanerChatReplyMessage::cleanerchattype() const {
+  // @@protoc_insertion_point(field_get:CleanerChatReplyMessage.cleanerChatType)
+  return static_cast< ::CleanerChatType >(cleanerchattype_);
+}
+ void CleanerChatReplyMessage::set_cleanerchattype(::CleanerChatType value) {
+  assert(::CleanerChatType_IsValid(value));
+  set_has_cleanerchattype();
+  cleanerchattype_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatReplyMessage.cleanerChatType)
+}
+
+// optional uint32 gameId = 3 [default = 0];
+bool CleanerChatReplyMessage::has_gameid() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+void CleanerChatReplyMessage::set_has_gameid() {
+  _has_bits_[0] |= 0x00000004u;
+}
+void CleanerChatReplyMessage::clear_has_gameid() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+void CleanerChatReplyMessage::clear_gameid() {
+  gameid_ = 0u;
+  clear_has_gameid();
+}
+ ::google::protobuf::uint32 CleanerChatReplyMessage::gameid() const {
+  // @@protoc_insertion_point(field_get:CleanerChatReplyMessage.gameId)
+  return gameid_;
+}
+ void CleanerChatReplyMessage::set_gameid(::google::protobuf::uint32 value) {
+  set_has_gameid();
+  gameid_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatReplyMessage.gameId)
+}
+
+// required uint32 playerId = 4;
+bool CleanerChatReplyMessage::has_playerid() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+void CleanerChatReplyMessage::set_has_playerid() {
+  _has_bits_[0] |= 0x00000008u;
+}
+void CleanerChatReplyMessage::clear_has_playerid() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+void CleanerChatReplyMessage::clear_playerid() {
+  playerid_ = 0u;
+  clear_has_playerid();
+}
+ ::google::protobuf::uint32 CleanerChatReplyMessage::playerid() const {
+  // @@protoc_insertion_point(field_get:CleanerChatReplyMessage.playerId)
+  return playerid_;
+}
+ void CleanerChatReplyMessage::set_playerid(::google::protobuf::uint32 value) {
+  set_has_playerid();
+  playerid_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatReplyMessage.playerId)
+}
+
+// required .CleanerChatReplyMessage.CleanerActionType cleanerActionType = 5;
+bool CleanerChatReplyMessage::has_cleaneractiontype() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+void CleanerChatReplyMessage::set_has_cleaneractiontype() {
+  _has_bits_[0] |= 0x00000010u;
+}
+void CleanerChatReplyMessage::clear_has_cleaneractiontype() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+void CleanerChatReplyMessage::clear_cleaneractiontype() {
+  cleaneractiontype_ = 0;
+  clear_has_cleaneractiontype();
+}
+ ::CleanerChatReplyMessage_CleanerActionType CleanerChatReplyMessage::cleaneractiontype() const {
+  // @@protoc_insertion_point(field_get:CleanerChatReplyMessage.cleanerActionType)
+  return static_cast< ::CleanerChatReplyMessage_CleanerActionType >(cleaneractiontype_);
+}
+ void CleanerChatReplyMessage::set_cleaneractiontype(::CleanerChatReplyMessage_CleanerActionType value) {
+  assert(::CleanerChatReplyMessage_CleanerActionType_IsValid(value));
+  set_has_cleaneractiontype();
+  cleaneractiontype_ = value;
+  // @@protoc_insertion_point(field_set:CleanerChatReplyMessage.cleanerActionType)
+}
+
+// optional string cleanerText = 6 [default = ""];
+bool CleanerChatReplyMessage::has_cleanertext() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+void CleanerChatReplyMessage::set_has_cleanertext() {
+  _has_bits_[0] |= 0x00000020u;
+}
+void CleanerChatReplyMessage::clear_has_cleanertext() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+void CleanerChatReplyMessage::clear_cleanertext() {
+  cleanertext_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_cleanertext();
+}
+ const ::std::string& CleanerChatReplyMessage::cleanertext() const {
+  // @@protoc_insertion_point(field_get:CleanerChatReplyMessage.cleanerText)
+  return cleanertext_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerChatReplyMessage::set_cleanertext(const ::std::string& value) {
+  set_has_cleanertext();
+  cleanertext_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:CleanerChatReplyMessage.cleanerText)
+}
+ void CleanerChatReplyMessage::set_cleanertext(const char* value) {
+  set_has_cleanertext();
+  cleanertext_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:CleanerChatReplyMessage.cleanerText)
+}
+ void CleanerChatReplyMessage::set_cleanertext(const char* value, size_t size) {
+  set_has_cleanertext();
+  cleanertext_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:CleanerChatReplyMessage.cleanerText)
+}
+ ::std::string* CleanerChatReplyMessage::mutable_cleanertext() {
+  set_has_cleanertext();
+  // @@protoc_insertion_point(field_mutable:CleanerChatReplyMessage.cleanerText)
+  return cleanertext_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* CleanerChatReplyMessage::release_cleanertext() {
+  // @@protoc_insertion_point(field_release:CleanerChatReplyMessage.cleanerText)
+  clear_has_cleanertext();
+  return cleanertext_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void CleanerChatReplyMessage::set_allocated_cleanertext(::std::string* cleanertext) {
+  if (cleanertext != NULL) {
+    set_has_cleanertext();
+  } else {
+    clear_has_cleanertext();
+  }
+  cleanertext_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), cleanertext);
+  // @@protoc_insertion_point(field_set_allocated:CleanerChatReplyMessage.cleanerText)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
+
+static ::std::string* MutableUnknownFieldsForChatCleanerMessage(
+    ChatCleanerMessage* ptr) {
+  return ptr->mutable_unknown_fields();
+}
 
 bool ChatCleanerMessage_ChatCleanerMessageType_IsValid(int value) {
   switch(value) {
@@ -1366,7 +2123,7 @@ bool ChatCleanerMessage_ChatCleanerMessageType_IsValid(int value) {
   }
 }
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const ChatCleanerMessage_ChatCleanerMessageType ChatCleanerMessage::Type_CleanerInitMessage;
 const ChatCleanerMessage_ChatCleanerMessageType ChatCleanerMessage::Type_CleanerInitAckMessage;
 const ChatCleanerMessage_ChatCleanerMessageType ChatCleanerMessage::Type_CleanerChatRequestMessage;
@@ -1374,17 +2131,17 @@ const ChatCleanerMessage_ChatCleanerMessageType ChatCleanerMessage::Type_Cleaner
 const ChatCleanerMessage_ChatCleanerMessageType ChatCleanerMessage::ChatCleanerMessageType_MIN;
 const ChatCleanerMessage_ChatCleanerMessageType ChatCleanerMessage::ChatCleanerMessageType_MAX;
 const int ChatCleanerMessage::ChatCleanerMessageType_ARRAYSIZE;
-#endif  // _MSC_VER
-#ifndef _MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int ChatCleanerMessage::kMessageTypeFieldNumber;
 const int ChatCleanerMessage::kCleanerInitMessageFieldNumber;
 const int ChatCleanerMessage::kCleanerInitAckMessageFieldNumber;
 const int ChatCleanerMessage::kCleanerChatRequestMessageFieldNumber;
 const int ChatCleanerMessage::kCleanerChatReplyMessageFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 ChatCleanerMessage::ChatCleanerMessage()
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(), _arena_ptr_(NULL) {
   SharedCtor();
   // @@protoc_insertion_point(constructor:ChatCleanerMessage)
 }
@@ -1417,14 +2174,18 @@ void ChatCleanerMessage::InitAsDefaultInstance() {
 }
 
 ChatCleanerMessage::ChatCleanerMessage(const ChatCleanerMessage& from)
-  : ::google::protobuf::MessageLite() {
+  : ::google::protobuf::MessageLite(),
+    _arena_ptr_(NULL) {
   SharedCtor();
   MergeFrom(from);
   // @@protoc_insertion_point(copy_constructor:ChatCleanerMessage)
 }
 
 void ChatCleanerMessage::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  _unknown_fields_.UnsafeSetDefault(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
   messagetype_ = 1;
   cleanerinitmessage_ = NULL;
   cleanerinitackmessage_ = NULL;
@@ -1439,6 +2200,8 @@ ChatCleanerMessage::~ChatCleanerMessage() {
 }
 
 void ChatCleanerMessage::SharedDtor() {
+  _unknown_fields_.DestroyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
   #ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
   if (this != &default_instance()) {
   #else
@@ -1467,12 +2230,17 @@ const ChatCleanerMessage& ChatCleanerMessage::default_instance() {
 
 ChatCleanerMessage* ChatCleanerMessage::default_instance_ = NULL;
 
-ChatCleanerMessage* ChatCleanerMessage::New() const {
-  return new ChatCleanerMessage;
+ChatCleanerMessage* ChatCleanerMessage::New(::google::protobuf::Arena* arena) const {
+  ChatCleanerMessage* n = new ChatCleanerMessage;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void ChatCleanerMessage::Clear() {
-  if (_has_bits_[0 / 32] & 31) {
+// @@protoc_insertion_point(message_clear_start:ChatCleanerMessage)
+  if (_has_bits_[0 / 32] & 31u) {
     messagetype_ = 1;
     if (has_cleanerinitmessage()) {
       if (cleanerinitmessage_ != NULL) cleanerinitmessage_->::CleanerInitMessage::Clear();
@@ -1488,17 +2256,19 @@ void ChatCleanerMessage::Clear() {
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->clear();
+  _unknown_fields_.ClearToEmptyNoArena(
+      &::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 bool ChatCleanerMessage::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  ::google::protobuf::io::StringOutputStream unknown_fields_string(
-      mutable_unknown_fields());
+  ::google::protobuf::io::LazyStringOutputStream unknown_fields_string(
+      ::google::protobuf::NewPermanentCallback(
+          &MutableUnknownFieldsForChatCleanerMessage, this));
   ::google::protobuf::io::CodedOutputStream unknown_fields_stream(
-      &unknown_fields_string);
+      &unknown_fields_string, false);
   // @@protoc_insertion_point(parse_start:ChatCleanerMessage)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
@@ -1515,7 +2285,7 @@ bool ChatCleanerMessage::MergePartialFromCodedStream(
           if (::ChatCleanerMessage_ChatCleanerMessageType_IsValid(value)) {
             set_messagetype(static_cast< ::ChatCleanerMessage_ChatCleanerMessageType >(value));
           } else {
-            unknown_fields_stream.WriteVarint32(tag);
+            unknown_fields_stream.WriteVarint32(8);
             unknown_fields_stream.WriteVarint32(value);
           }
         } else {
@@ -1611,68 +2381,68 @@ void ChatCleanerMessage::SerializeWithCachedSizes(
   // optional .CleanerInitMessage cleanerInitMessage = 2;
   if (has_cleanerinitmessage()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      2, this->cleanerinitmessage(), output);
+      2, *this->cleanerinitmessage_, output);
   }
 
   // optional .CleanerInitAckMessage cleanerInitAckMessage = 3;
   if (has_cleanerinitackmessage()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      3, this->cleanerinitackmessage(), output);
+      3, *this->cleanerinitackmessage_, output);
   }
 
   // optional .CleanerChatRequestMessage cleanerChatRequestMessage = 4;
   if (has_cleanerchatrequestmessage()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      4, this->cleanerchatrequestmessage(), output);
+      4, *this->cleanerchatrequestmessage_, output);
   }
 
   // optional .CleanerChatReplyMessage cleanerChatReplyMessage = 5;
   if (has_cleanerchatreplymessage()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessage(
-      5, this->cleanerchatreplymessage(), output);
+      5, *this->cleanerchatreplymessage_, output);
   }
 
   output->WriteRaw(unknown_fields().data(),
-                   unknown_fields().size());
+                   static_cast<int>(unknown_fields().size()));
   // @@protoc_insertion_point(serialize_end:ChatCleanerMessage)
 }
 
 int ChatCleanerMessage::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:ChatCleanerMessage)
   int total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .ChatCleanerMessage.ChatCleanerMessageType messageType = 1;
-    if (has_messagetype()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->messagetype());
-    }
-
+  // required .ChatCleanerMessage.ChatCleanerMessageType messageType = 1;
+  if (has_messagetype()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->messagetype());
+  }
+  if (_has_bits_[1 / 32] & 30u) {
     // optional .CleanerInitMessage cleanerInitMessage = 2;
     if (has_cleanerinitmessage()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->cleanerinitmessage());
+          *this->cleanerinitmessage_);
     }
 
     // optional .CleanerInitAckMessage cleanerInitAckMessage = 3;
     if (has_cleanerinitackmessage()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->cleanerinitackmessage());
+          *this->cleanerinitackmessage_);
     }
 
     // optional .CleanerChatRequestMessage cleanerChatRequestMessage = 4;
     if (has_cleanerchatrequestmessage()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->cleanerchatrequestmessage());
+          *this->cleanerchatrequestmessage_);
     }
 
     // optional .CleanerChatReplyMessage cleanerChatReplyMessage = 5;
     if (has_cleanerchatreplymessage()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->cleanerchatreplymessage());
+          *this->cleanerchatreplymessage_);
     }
 
   }
@@ -1690,7 +2460,10 @@ void ChatCleanerMessage::CheckTypeAndMergeFrom(
 }
 
 void ChatCleanerMessage::MergeFrom(const ChatCleanerMessage& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:ChatCleanerMessage)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) {
+    ::google::protobuf::internal::MergeFromFail(__FILE__, __LINE__);
+  }
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_messagetype()) {
       set_messagetype(from.messagetype());
@@ -1708,10 +2481,13 @@ void ChatCleanerMessage::MergeFrom(const ChatCleanerMessage& from) {
       mutable_cleanerchatreplymessage()->::CleanerChatReplyMessage::MergeFrom(from.cleanerchatreplymessage());
     }
   }
-  mutable_unknown_fields()->append(from.unknown_fields());
+  if (!from.unknown_fields().empty()) {
+    mutable_unknown_fields()->append(from.unknown_fields());
+  }
 }
 
 void ChatCleanerMessage::CopyFrom(const ChatCleanerMessage& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ChatCleanerMessage)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1721,37 +2497,260 @@ bool ChatCleanerMessage::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   if (has_cleanerinitmessage()) {
-    if (!this->cleanerinitmessage().IsInitialized()) return false;
+    if (!this->cleanerinitmessage_->IsInitialized()) return false;
   }
   if (has_cleanerinitackmessage()) {
-    if (!this->cleanerinitackmessage().IsInitialized()) return false;
+    if (!this->cleanerinitackmessage_->IsInitialized()) return false;
   }
   if (has_cleanerchatrequestmessage()) {
-    if (!this->cleanerchatrequestmessage().IsInitialized()) return false;
+    if (!this->cleanerchatrequestmessage_->IsInitialized()) return false;
   }
   if (has_cleanerchatreplymessage()) {
-    if (!this->cleanerchatreplymessage().IsInitialized()) return false;
+    if (!this->cleanerchatreplymessage_->IsInitialized()) return false;
   }
   return true;
 }
 
 void ChatCleanerMessage::Swap(ChatCleanerMessage* other) {
-  if (other != this) {
-    std::swap(messagetype_, other->messagetype_);
-    std::swap(cleanerinitmessage_, other->cleanerinitmessage_);
-    std::swap(cleanerinitackmessage_, other->cleanerinitackmessage_);
-    std::swap(cleanerchatrequestmessage_, other->cleanerchatrequestmessage_);
-    std::swap(cleanerchatreplymessage_, other->cleanerchatreplymessage_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.swap(other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void ChatCleanerMessage::InternalSwap(ChatCleanerMessage* other) {
+  std::swap(messagetype_, other->messagetype_);
+  std::swap(cleanerinitmessage_, other->cleanerinitmessage_);
+  std::swap(cleanerinitackmessage_, other->cleanerinitackmessage_);
+  std::swap(cleanerchatrequestmessage_, other->cleanerchatrequestmessage_);
+  std::swap(cleanerchatreplymessage_, other->cleanerchatreplymessage_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  _unknown_fields_.Swap(&other->_unknown_fields_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::std::string ChatCleanerMessage::GetTypeName() const {
   return "ChatCleanerMessage";
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// ChatCleanerMessage
+
+// required .ChatCleanerMessage.ChatCleanerMessageType messageType = 1;
+bool ChatCleanerMessage::has_messagetype() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void ChatCleanerMessage::set_has_messagetype() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void ChatCleanerMessage::clear_has_messagetype() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void ChatCleanerMessage::clear_messagetype() {
+  messagetype_ = 1;
+  clear_has_messagetype();
+}
+ ::ChatCleanerMessage_ChatCleanerMessageType ChatCleanerMessage::messagetype() const {
+  // @@protoc_insertion_point(field_get:ChatCleanerMessage.messageType)
+  return static_cast< ::ChatCleanerMessage_ChatCleanerMessageType >(messagetype_);
+}
+ void ChatCleanerMessage::set_messagetype(::ChatCleanerMessage_ChatCleanerMessageType value) {
+  assert(::ChatCleanerMessage_ChatCleanerMessageType_IsValid(value));
+  set_has_messagetype();
+  messagetype_ = value;
+  // @@protoc_insertion_point(field_set:ChatCleanerMessage.messageType)
+}
+
+// optional .CleanerInitMessage cleanerInitMessage = 2;
+bool ChatCleanerMessage::has_cleanerinitmessage() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void ChatCleanerMessage::set_has_cleanerinitmessage() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void ChatCleanerMessage::clear_has_cleanerinitmessage() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void ChatCleanerMessage::clear_cleanerinitmessage() {
+  if (cleanerinitmessage_ != NULL) cleanerinitmessage_->::CleanerInitMessage::Clear();
+  clear_has_cleanerinitmessage();
+}
+const ::CleanerInitMessage& ChatCleanerMessage::cleanerinitmessage() const {
+  // @@protoc_insertion_point(field_get:ChatCleanerMessage.cleanerInitMessage)
+#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  return cleanerinitmessage_ != NULL ? *cleanerinitmessage_ : *default_instance().cleanerinitmessage_;
+#else
+  return cleanerinitmessage_ != NULL ? *cleanerinitmessage_ : *default_instance_->cleanerinitmessage_;
+#endif
+}
+::CleanerInitMessage* ChatCleanerMessage::mutable_cleanerinitmessage() {
+  set_has_cleanerinitmessage();
+  if (cleanerinitmessage_ == NULL) {
+    cleanerinitmessage_ = new ::CleanerInitMessage;
+  }
+  // @@protoc_insertion_point(field_mutable:ChatCleanerMessage.cleanerInitMessage)
+  return cleanerinitmessage_;
+}
+::CleanerInitMessage* ChatCleanerMessage::release_cleanerinitmessage() {
+  // @@protoc_insertion_point(field_release:ChatCleanerMessage.cleanerInitMessage)
+  clear_has_cleanerinitmessage();
+  ::CleanerInitMessage* temp = cleanerinitmessage_;
+  cleanerinitmessage_ = NULL;
+  return temp;
+}
+void ChatCleanerMessage::set_allocated_cleanerinitmessage(::CleanerInitMessage* cleanerinitmessage) {
+  delete cleanerinitmessage_;
+  cleanerinitmessage_ = cleanerinitmessage;
+  if (cleanerinitmessage) {
+    set_has_cleanerinitmessage();
+  } else {
+    clear_has_cleanerinitmessage();
+  }
+  // @@protoc_insertion_point(field_set_allocated:ChatCleanerMessage.cleanerInitMessage)
+}
+
+// optional .CleanerInitAckMessage cleanerInitAckMessage = 3;
+bool ChatCleanerMessage::has_cleanerinitackmessage() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+void ChatCleanerMessage::set_has_cleanerinitackmessage() {
+  _has_bits_[0] |= 0x00000004u;
+}
+void ChatCleanerMessage::clear_has_cleanerinitackmessage() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+void ChatCleanerMessage::clear_cleanerinitackmessage() {
+  if (cleanerinitackmessage_ != NULL) cleanerinitackmessage_->::CleanerInitAckMessage::Clear();
+  clear_has_cleanerinitackmessage();
+}
+const ::CleanerInitAckMessage& ChatCleanerMessage::cleanerinitackmessage() const {
+  // @@protoc_insertion_point(field_get:ChatCleanerMessage.cleanerInitAckMessage)
+#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  return cleanerinitackmessage_ != NULL ? *cleanerinitackmessage_ : *default_instance().cleanerinitackmessage_;
+#else
+  return cleanerinitackmessage_ != NULL ? *cleanerinitackmessage_ : *default_instance_->cleanerinitackmessage_;
+#endif
+}
+::CleanerInitAckMessage* ChatCleanerMessage::mutable_cleanerinitackmessage() {
+  set_has_cleanerinitackmessage();
+  if (cleanerinitackmessage_ == NULL) {
+    cleanerinitackmessage_ = new ::CleanerInitAckMessage;
+  }
+  // @@protoc_insertion_point(field_mutable:ChatCleanerMessage.cleanerInitAckMessage)
+  return cleanerinitackmessage_;
+}
+::CleanerInitAckMessage* ChatCleanerMessage::release_cleanerinitackmessage() {
+  // @@protoc_insertion_point(field_release:ChatCleanerMessage.cleanerInitAckMessage)
+  clear_has_cleanerinitackmessage();
+  ::CleanerInitAckMessage* temp = cleanerinitackmessage_;
+  cleanerinitackmessage_ = NULL;
+  return temp;
+}
+void ChatCleanerMessage::set_allocated_cleanerinitackmessage(::CleanerInitAckMessage* cleanerinitackmessage) {
+  delete cleanerinitackmessage_;
+  cleanerinitackmessage_ = cleanerinitackmessage;
+  if (cleanerinitackmessage) {
+    set_has_cleanerinitackmessage();
+  } else {
+    clear_has_cleanerinitackmessage();
+  }
+  // @@protoc_insertion_point(field_set_allocated:ChatCleanerMessage.cleanerInitAckMessage)
+}
+
+// optional .CleanerChatRequestMessage cleanerChatRequestMessage = 4;
+bool ChatCleanerMessage::has_cleanerchatrequestmessage() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+void ChatCleanerMessage::set_has_cleanerchatrequestmessage() {
+  _has_bits_[0] |= 0x00000008u;
+}
+void ChatCleanerMessage::clear_has_cleanerchatrequestmessage() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+void ChatCleanerMessage::clear_cleanerchatrequestmessage() {
+  if (cleanerchatrequestmessage_ != NULL) cleanerchatrequestmessage_->::CleanerChatRequestMessage::Clear();
+  clear_has_cleanerchatrequestmessage();
+}
+const ::CleanerChatRequestMessage& ChatCleanerMessage::cleanerchatrequestmessage() const {
+  // @@protoc_insertion_point(field_get:ChatCleanerMessage.cleanerChatRequestMessage)
+#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  return cleanerchatrequestmessage_ != NULL ? *cleanerchatrequestmessage_ : *default_instance().cleanerchatrequestmessage_;
+#else
+  return cleanerchatrequestmessage_ != NULL ? *cleanerchatrequestmessage_ : *default_instance_->cleanerchatrequestmessage_;
+#endif
+}
+::CleanerChatRequestMessage* ChatCleanerMessage::mutable_cleanerchatrequestmessage() {
+  set_has_cleanerchatrequestmessage();
+  if (cleanerchatrequestmessage_ == NULL) {
+    cleanerchatrequestmessage_ = new ::CleanerChatRequestMessage;
+  }
+  // @@protoc_insertion_point(field_mutable:ChatCleanerMessage.cleanerChatRequestMessage)
+  return cleanerchatrequestmessage_;
+}
+::CleanerChatRequestMessage* ChatCleanerMessage::release_cleanerchatrequestmessage() {
+  // @@protoc_insertion_point(field_release:ChatCleanerMessage.cleanerChatRequestMessage)
+  clear_has_cleanerchatrequestmessage();
+  ::CleanerChatRequestMessage* temp = cleanerchatrequestmessage_;
+  cleanerchatrequestmessage_ = NULL;
+  return temp;
+}
+void ChatCleanerMessage::set_allocated_cleanerchatrequestmessage(::CleanerChatRequestMessage* cleanerchatrequestmessage) {
+  delete cleanerchatrequestmessage_;
+  cleanerchatrequestmessage_ = cleanerchatrequestmessage;
+  if (cleanerchatrequestmessage) {
+    set_has_cleanerchatrequestmessage();
+  } else {
+    clear_has_cleanerchatrequestmessage();
+  }
+  // @@protoc_insertion_point(field_set_allocated:ChatCleanerMessage.cleanerChatRequestMessage)
+}
+
+// optional .CleanerChatReplyMessage cleanerChatReplyMessage = 5;
+bool ChatCleanerMessage::has_cleanerchatreplymessage() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+void ChatCleanerMessage::set_has_cleanerchatreplymessage() {
+  _has_bits_[0] |= 0x00000010u;
+}
+void ChatCleanerMessage::clear_has_cleanerchatreplymessage() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+void ChatCleanerMessage::clear_cleanerchatreplymessage() {
+  if (cleanerchatreplymessage_ != NULL) cleanerchatreplymessage_->::CleanerChatReplyMessage::Clear();
+  clear_has_cleanerchatreplymessage();
+}
+const ::CleanerChatReplyMessage& ChatCleanerMessage::cleanerchatreplymessage() const {
+  // @@protoc_insertion_point(field_get:ChatCleanerMessage.cleanerChatReplyMessage)
+#ifdef GOOGLE_PROTOBUF_NO_STATIC_INITIALIZER
+  return cleanerchatreplymessage_ != NULL ? *cleanerchatreplymessage_ : *default_instance().cleanerchatreplymessage_;
+#else
+  return cleanerchatreplymessage_ != NULL ? *cleanerchatreplymessage_ : *default_instance_->cleanerchatreplymessage_;
+#endif
+}
+::CleanerChatReplyMessage* ChatCleanerMessage::mutable_cleanerchatreplymessage() {
+  set_has_cleanerchatreplymessage();
+  if (cleanerchatreplymessage_ == NULL) {
+    cleanerchatreplymessage_ = new ::CleanerChatReplyMessage;
+  }
+  // @@protoc_insertion_point(field_mutable:ChatCleanerMessage.cleanerChatReplyMessage)
+  return cleanerchatreplymessage_;
+}
+::CleanerChatReplyMessage* ChatCleanerMessage::release_cleanerchatreplymessage() {
+  // @@protoc_insertion_point(field_release:ChatCleanerMessage.cleanerChatReplyMessage)
+  clear_has_cleanerchatreplymessage();
+  ::CleanerChatReplyMessage* temp = cleanerchatreplymessage_;
+  cleanerchatreplymessage_ = NULL;
+  return temp;
+}
+void ChatCleanerMessage::set_allocated_cleanerchatreplymessage(::CleanerChatReplyMessage* cleanerchatreplymessage) {
+  delete cleanerchatreplymessage_;
+  cleanerchatreplymessage_ = cleanerchatreplymessage;
+  if (cleanerchatreplymessage) {
+    set_has_cleanerchatreplymessage();
+  } else {
+    clear_has_cleanerchatreplymessage();
+  }
+  // @@protoc_insertion_point(field_set_allocated:ChatCleanerMessage.cleanerChatReplyMessage)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 

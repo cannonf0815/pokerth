@@ -792,20 +792,20 @@ void gameTableImpl::applySettings(settingsDialogImpl* mySettingsDialog)
 	//refresh board cards if game is running
 	if(myStartWindow->getSession()->getCurrentGame()) {
 
-		int tempBoardCardsArray[5];
-		myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(tempBoardCardsArray);
+		int boardCards[5];
+		myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(boardCards);
 		GameState currentState = myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getCurrentBeRo()->getMyBeRoID();
 		if(currentState >= GAME_STATE_FLOP && currentState <= GAME_STATE_POST_RIVER)
 			for(int i=0; i<3; i++) {
-				QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[i], 10)+".png"));
+				QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[i], 10)+".png"));
 				boardCardsArray[i]->setPixmap(card, false);
 			}
 		if(currentState >= GAME_STATE_TURN && currentState <= GAME_STATE_POST_RIVER) {
-			QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[3], 10)+".png"));
+			QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[3], 10)+".png"));
 			boardCardsArray[3]->setPixmap(card, false);
 		}
 		if(currentState == GAME_STATE_RIVER || currentState == GAME_STATE_POST_RIVER) {
-			QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[4], 10)+".png"));
+			QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[4], 10)+".png"));
 			boardCardsArray[4]->setPixmap(card, false);
 		}
 	}
@@ -834,7 +834,7 @@ void gameTableImpl::applySettings(settingsDialogImpl* mySettingsDialog)
 			QPixmap tempCardsPixmapArray[2];
 			int tempCardsIntArray[2];
 
-			humanPlayer->getMyCards(tempCardsIntArray);
+			humanPlayer->getMyHoleCards(tempCardsIntArray);
 			if(myConfig->readConfigInt("AntiPeekMode")) {
 				holeCardsArray[0][0]->setPixmap(flipside, true);
 				tempCardsPixmapArray[0] = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempCardsIntArray[0], 10)+".png"));
@@ -1440,10 +1440,10 @@ void gameTableImpl::dealHoleCards()
 	PlayerListConstIterator it_c;
 	PlayerList seatsList = currentGame->getSeatsList();
 	for (it_c=seatsList->begin(); it_c!=seatsList->end(); ++it_c) {
-		(*it_c)->getMyCards(tempCardsIntArray);
+		(*it_c)->getMyHoleCards(tempCardsIntArray);
 		for(j=0; j<2; j++) {
 			if((*it_c)->getMyActiveStatus()) {
-				if (( (*it_c)->getMyID() == 0)/* || DEBUG_MODE*/) {
+				if (( (*it_c)->getMyID() == 0) || (currentGame->getCurrentHand()->getLog() && currentGame->getCurrentHand()->getLog()->getDebugMode()) ) {
 					tempCardsPixmapArray[j].load(myCardDeckStyle->getCurrentDir()+QString::number(tempCardsIntArray[j], 10)+".png");
 					if(myConfig->readConfigInt("AntiPeekMode")) {
 						holeCardsArray[(*it_c)->getMyID()][j]->setPixmap(flipside, true);
@@ -1532,10 +1532,10 @@ void gameTableImpl::dealFlopCards3()
 void gameTableImpl::dealFlopCards4()
 {
 
-	int tempBoardCardsArray[5];
+	int boardCards[5];
 
-	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(tempBoardCardsArray);
-	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[0], 10)+".png"));
+	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(boardCards);
+	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[0], 10)+".png"));
 
 	//Config? mit oder ohne Eye-Candy?
 	if(myConfig->readConfigInt("ShowFlipCardsAnimation")) {
@@ -1552,9 +1552,9 @@ void gameTableImpl::dealFlopCards4()
 void gameTableImpl::dealFlopCards5()
 {
 
-	int tempBoardCardsArray[5];
-	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(tempBoardCardsArray);
-	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[1], 10)+".png"));
+	int boardCards[5];
+	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(boardCards);
+	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[1], 10)+".png"));
 
 	//Config? mit oder ohne Eye-Candy?
 	if(myConfig->readConfigInt("ShowFlipCardsAnimation")) {
@@ -1571,9 +1571,9 @@ void gameTableImpl::dealFlopCards5()
 void gameTableImpl::dealFlopCards6()
 {
 
-	int tempBoardCardsArray[5];
-	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(tempBoardCardsArray);
-	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[2], 10)+".png"));
+	int boardCards[5];
+	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(boardCards);
+	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[2], 10)+".png"));
 
 	//Config? mit oder ohne Eye-Candy?
 	if(myConfig->readConfigInt("ShowFlipCardsAnimation")) {
@@ -1615,9 +1615,9 @@ void gameTableImpl::dealTurnCards1()
 void gameTableImpl::dealTurnCards2()
 {
 
-	int tempBoardCardsArray[5];
-	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(tempBoardCardsArray);
-	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[3], 10)+".png"));
+	int boardCards[5];
+	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(boardCards);
+	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[3], 10)+".png"));
 
 	//Config? mit oder ohne Eye-Candy?
 	if(myConfig->readConfigInt("ShowFlipCardsAnimation")) {
@@ -1660,9 +1660,9 @@ void gameTableImpl::dealRiverCards1()
 void gameTableImpl::dealRiverCards2()
 {
 
-	int tempBoardCardsArray[5];
-	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(tempBoardCardsArray);
-	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(tempBoardCardsArray[4], 10)+".png"));
+	int boardCards[5];
+	myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(boardCards);
+	QPixmap card = QPixmap::fromImage(QImage(myCardDeckStyle->getCurrentDir()+QString::number(boardCards[4], 10)+".png"));
 
 	//Config? mit oder ohne Eye-Candy?
 	if(myConfig->readConfigInt("ShowFlipCardsAnimation")) {
@@ -2551,7 +2551,7 @@ void gameTableImpl::postRiverRunAnimation2()
 			for (it_c=activePlayerList->begin(); it_c!=activePlayerList->end(); ++it_c) {
 				if((*it_c)->getMyAction() != PLAYER_ACTION_FOLD) {
 					//set Player value (logging) for all in already shown cards
-					(*it_c)->setMyCardsFlip(1,3);
+					(*it_c)->setMyHoleCardsFlip(1,3);
 				}
 			}
 		}
@@ -2806,29 +2806,23 @@ void gameTableImpl::postRiverRunAnimation6()
 			}
 		}
 
-		if( !DEBUG_MODE ) {
-
-			if(myStartWindow->getSession()->getGameType() == Session::GAME_TYPE_LOCAL) {
-				currentGameOver = true;
+		if(myStartWindow->getSession()->getGameType() == Session::GAME_TYPE_LOCAL) {
+			currentGameOver = true;
 #ifdef GUI_800x480
-				tabs.pushButton_break->setDisabled(false);
+			tabs.pushButton_break->setDisabled(false);
 #else
-				pushButton_break->setDisabled(false);
+			pushButton_break->setDisabled(false);
 #endif
-				QFontMetrics tempMetrics = this->fontMetrics();
-				int width = tempMetrics.width(tr("Start"));
+			QFontMetrics tempMetrics = this->fontMetrics();
+			int width = tempMetrics.width(tr("Start"));
 #ifdef GUI_800x480
-				tabs.pushButton_break->setMinimumSize(width+10,20);
-				tabs.pushButton_break->setText(tr("Start"));
+			tabs.pushButton_break->setMinimumSize(width+10,20);
+			tabs.pushButton_break->setText(tr("Start"));
 #else
-				pushButton_break->setMinimumSize(width+10,20);
-				pushButton_break->setText(tr("Start"));
+			pushButton_break->setMinimumSize(width+10,20);
+			pushButton_break->setText(tr("Start"));
 #endif
-				blinkingStartButtonAnimationTimer->start(500);
-			}
-		} else {
-			myStartWindow->callNewGameDialog();
-			//Bei Cancel nichts machen!!!
+			blinkingStartButtonAnimationTimer->start(500);
 		}
 		return;
 	}
@@ -2850,7 +2844,7 @@ void gameTableImpl::showHoleCards(unsigned playerId, bool allIn)
 
 		if((*it_c)->getMyUniqueID() == playerId) {
 
-			(*it_c)->getMyCards(tempCardsIntArray);
+			(*it_c)->getMyHoleCards(tempCardsIntArray);
 			for(j=0; j<2; j++) {
 
 				if(showFlipcardAnimation) { // with Eye-Candy
@@ -2862,9 +2856,9 @@ void gameTableImpl::showHoleCards(unsigned playerId, bool allIn)
 			}
 			//set Player value (logging)
 			if(currentHand->getCurrentRound() < GAME_STATE_RIVER || allIn) {
-				(*it_c)->setMyCardsFlip(1,2); //for bero before postriver or allin just log the hole cards
+				(*it_c)->setMyHoleCardsFlip(1,2); //for bero before postriver or allin just log the hole cards
 			} else {
-				(*it_c)->setMyCardsFlip(1,1); //for postriver log the value
+				(*it_c)->setMyHoleCardsFlip(1,1); //for postriver log the value
 			}
 		}
 	}
@@ -3263,7 +3257,6 @@ bool gameTableImpl::eventFilter(QObject *obj, QEvent *event)
 		myChat->nickAutoCompletition();
 		return true;
 	} else if (event->type() == QEvent::KeyPress && keyEvent->key() == Qt::Key_Back) {
-		event->ignore();
 		closeGameTable();
 		return true;
 	} else if (event->type() == QEvent::Close) {
@@ -4023,7 +4016,7 @@ void gameTableImpl::refreshCardsChance(GameState bero)
 			int boardCards[5];
 			int holeCards[2];
 
-			humanPlayer->getMyCards(holeCards);
+			humanPlayer->getMyHoleCards(holeCards);
 			myStartWindow->getSession()->getCurrentGame()->getCurrentHand()->getBoard()->getMyCards(boardCards);
 
 			if(humanPlayer->getMyAction() == PLAYER_ACTION_FOLD) {
@@ -4307,11 +4300,12 @@ void gameTableImpl::restoreGameTableGeometry()
 		}
 #endif
 	} else {
+#ifndef ANDROID
 		//resize only if style size allow this and if NOT fixed windows size
 		if(!myGameTableStyle->getIfFixedWindowSize().toInt() && myConfig->readConfigInt("GameTableHeightSave") <= myGameTableStyle->getMaximumWindowHeight().toInt() && myConfig->readConfigInt("GameTableHeightSave") >= myGameTableStyle->getMinimumWindowHeight().toInt() && myConfig->readConfigInt("GameTableWidthSave") <= myGameTableStyle->getMaximumWindowWidth().toInt() && myConfig->readConfigInt("GameTableWidthSave") >= myGameTableStyle->getMinimumWindowWidth().toInt()) {
-
 			this->resize(myConfig->readConfigInt("GameTableWidthSave"), myConfig->readConfigInt("GameTableHeightSave"));
 		}
+#endif
 	}
 #ifdef ANDROID
 	if(getAndroidApiVersion() == 10) {
@@ -4320,6 +4314,8 @@ void gameTableImpl::restoreGameTableGeometry()
 		int availableHeight = dw.screenGeometry().height();
 		this->showNormal();
 		this->setGeometry(0,0,availableWidth, availableHeight);
+	} else {
+		this->showFullScreen();
 	}
 #endif
 }
